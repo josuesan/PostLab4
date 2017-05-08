@@ -4,11 +4,19 @@
 
 	    <div class="form-group" >
 
-		    <input type="text" class="form-control" formControlName="name" placeholder="Nombre" >
-		    <input type="text" class="form-control" formControlName="price" placeholder="Precio" >
-		    <input type="text" class="form-control" formControlName="description" placeholder="Descripcion" >
-		    <input type="text" class="form-control" formControlName="img" placeholder="Imagen URL" >
-
+		    <input type="text" class="form-control" formControlName="name" placeholder="Nombre" required="required" >
+		    <input type="text" class="form-control" formControlName="price" placeholder="Precio" required="required">
+		    <input type="text" class="form-control" formControlName="description" placeholder="Descripcion" required="required">
+		    <input type="text" class="form-control" formControlName="img" placeholder="Imagen URL" required="required">
+		    <input type="number" class="form-control" formControlName="sell" placeholder="Nro de vendidos" min="0" required="required">
+		    <select class="form-control" formControlName="category" required="required">
+		    	<option selected = "selected" disabled hidden>Choose here</option>
+		    	<option value="Camisas">Camisas</option>
+		    	<option value="Correas">Correas</option>
+  				<option value="Gorras">Gorras</option>
+  				<option value="Pantalones">Pantalones</option>
+  				<option value="Zapatos">Zapatos</option>
+ 			</select>
 	    </div>
 	    <div align="center">
 	    <button id = "create" type="submit" class="btn btn-default" >Crear</button>
@@ -22,6 +30,8 @@
 </div>
 <br>
 	<products-list (Editar)="mostrar($event)" > </products-list>
+	<p-messages [value]="msgs"></p-messages>
+
 
 
 

@@ -1,28 +1,3 @@
-<div class="row">
-	<div class="col-12">
-		<form [formGroup]="myForm" (ngSubmit)="register()">
-
-		    <div class="form-group" >
-				<input type="text" class="form-control" formControlName="name" placeholder="Nombre">
-			
-		        <div class="alert alert-danger" *ngIf="!myForm.controls['name'].valid">Tu debes colocar un nombre.</div>
-
-			    <input type="text" class="form-control" formControlName="lastname" placeholder="apellido" >
-			    <div class="alert alert-danger" *ngIf="!myForm.controls['lastname'].valid">Tu debes colocar un apellido.</div>
-
-			    <input type="email" class="form-control" formControlName="mail" placeholder="Correo">
-			
-		        <div class="alert alert-danger" *ngIf="!myForm.controls['mail'].valid &&myForm.controls['mail'].touched ">Tu debes colocar un correo valido.</div>
-
-			    <input type="password" class="form-control" formControlName="password" placeholder="Contraseña" >
-			    <div class="alert alert-danger" *ngIf="!myForm.controls['password'].valid &&myForm.controls['password'].touched ">Tu debes colocar un contraseña valida.</div>
-		    </div>
-	
-		    <div align="center">
-			    <button id = "login" type="submit" class="btn btn-default" [disabled]="!myForm.valid">Registrar</button>
-			    <button id = "back" class="btn btn-default" routerLink="/" routerLinkActive="active">Regresar</button>
-   
-		    </div>
-		</form>
-	</div>
-</div>
+<p>
+  register works!
+</p>
