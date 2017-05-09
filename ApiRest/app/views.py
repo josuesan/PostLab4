@@ -30,11 +30,13 @@ def log_user():
 	if not 'username' in session:
 		user = Users()
 		new = request.get_json()
-		usuario = new['usuario']
-		clave = new['clave']
+		print(new)
+		print(new['username'])
+		usuario = new['username']
+		clave = new['password']
 		if user.login(usuario,clave):
 			respuesta = {'error':False,'mensaje':'Usuario logueado.'}
-			create_session(usuario, user.is_Admin(username))
+			#create_session(usuario, user.is_Admin(username))
 			return json.dumps(respuesta)
 		else:
 			respuesta = {'error':True,'mensaje':'Contrasena o Usuario incorrectos'} 

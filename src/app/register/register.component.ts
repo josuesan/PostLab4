@@ -28,10 +28,8 @@ export class RegisterComponent implements OnInit {
 
   register () {
   	let formData = this.myForm.value;
-  	console.log(formData);
   	var headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    headers.append('CrossDomain', true);
     this.http.post('http://localhost:5000/registro', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
             alert(data.json().success);

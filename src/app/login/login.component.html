@@ -4,9 +4,9 @@
 
 		    <div class="form-group" >
 
-			    <input type="email" class="form-control" formControlName="mail" placeholder="Correo">
+			    <input type="text" class="form-control" formControlName="username" placeholder="Username">
 			
-		        <div class="alert alert-danger" *ngIf="!myForm.controls['mail'].valid &&myForm.controls['mail'].touched ">Tu debes colocar un correo valido.</div>
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['username'].valid &&myForm.controls['username'].touched ">Tu debes colocar un Username valido.</div>
 
 			    <input type="password" class="form-control" formControlName="password" placeholder="Contraseña" >
 			    <div class="alert alert-danger" *ngIf="!myForm.controls['password'].valid &&myForm.controls['password'].touched ">Tu debes colocar un contraseña valida.</div>

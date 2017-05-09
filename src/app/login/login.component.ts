@@ -12,8 +12,8 @@ export class LoginComponent implements OnInit {
   	constructor(public fb: FormBuilder, public http: Http) { 
   		
   		this.myForm = this.fb.group({
-	  	mail: ["",Validators.compose([Validators.required,Validators.email ])],
-	  	password: ["",Validators.compose([Validators.required,Validators.minLength(5)])]
+	  	username: ["",Validators.required],
+	  	password: ["",Validators.compose([Validators.required,Validators.minLength(6)])]
   		});
 
   	}
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
 
   	this.http.post('http://localhost:5000/login', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
-            alert(data.json().success);         
+            alert(data.json().success); 
+            console.log(data.json());        
       }, error => {
           console.log(error.json());
       });
