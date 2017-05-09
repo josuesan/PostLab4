@@ -1,3 +1,40 @@
-<p>
-  register works!
-</p>
+<div class="row">
+	<div class="col-12">
+		<form [formGroup]="myForm" (ngSubmit)="register()">
+
+		    <div class="form-group" >
+		    	<input type="text" class="form-control" formControlName="username" placeholder="Nombre de Usuario">
+			
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['username'].valid && myForm.controls['username'].touched ">Tu debes colocar un Username.</div>
+
+				<input type="text" class="form-control" formControlName="name" placeholder="Nombre">
+			
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['name'].valid && myForm.controls['name'].touched ">Tu debes colocar un nombre.</div>
+
+			    <input type="text" class="form-control" formControlName="lastname" placeholder="apellido" >
+			    <div class="alert alert-danger" *ngIf="!myForm.controls['lastname'].valid && myForm.controls['lastname'].touched ">Tu debes colocar un apellido.</div>
+				
+				<input type="text" class="form-control" formControlName="gender" placeholder="Genero">
+			
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['gender'].valid && myForm.controls['gender'].touched ">Tu debes colocar un Genero.</div>
+
+		        <input type="date" class="form-control" formControlName="birthdate" placeholder="fecha de nacimiento">
+			
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['birthdate'].valid && myForm.controls['birthdate'].touched ">Tu debes colocar una fecha.</div>
+
+			    <input type="email" class="form-control" formControlName="email" placeholder="Correo">
+			
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['email'].valid && myForm.controls['email'].touched ">Tu debes colocar un correo valido.</div>
+
+			    <input type="password" class="form-control" formControlName="password" placeholder="Contraseña" >
+			    <div class="alert alert-danger" *ngIf="!myForm.controls['password'].valid && myForm.controls['password'].touched ">Tu debes colocar un contraseña valida.</div>
+		    </div>
+	
+		    <div align="center">
+			    <button id = "register" type="submit" class="btn btn-default" [disabled]="!myForm.valid">Registrar</button>
+			    <button id = "back" class="btn btn-default" routerLink="/" routerLinkActive="active">Regresar</button>
+   
+		    </div>
+		</form>
+	</div>
+</div>
