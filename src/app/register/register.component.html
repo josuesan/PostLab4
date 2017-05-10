@@ -1,33 +1,41 @@
+<p-messages [value]="msgs"></p-messages>
 <div class="row">
+	<h2 class = "ta-center ff-pacifico">
+  		Registrarse
+	</h2>
 	<div class="col-12">
 		<form [formGroup]="myForm" (ngSubmit)="register()">
 
 		    <div class="form-group" >
-		    	<input type="text" class="form-control" formControlName="username" placeholder="Nombre de Usuario">
+		    	<input type="text" class="form-control" formControlName="username" placeholder="Nombre de usuario">
 			
-		        <div class="alert alert-danger" *ngIf="!myForm.controls['username'].valid && myForm.controls['username'].touched ">Tu debes colocar un Username.</div>
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['username'].valid && myForm.controls['username'].touched ">Tu debes colocar un username.</div>
 
 				<input type="text" class="form-control" formControlName="name" placeholder="Nombre">
 			
 		        <div class="alert alert-danger" *ngIf="!myForm.controls['name'].valid && myForm.controls['name'].touched ">Tu debes colocar un nombre.</div>
 
-			    <input type="text" class="form-control" formControlName="lastname" placeholder="apellido" >
+			    <input type="text" class="form-control" formControlName="lastname" placeholder="Apellido" >
 			    <div class="alert alert-danger" *ngIf="!myForm.controls['lastname'].valid && myForm.controls['lastname'].touched ">Tu debes colocar un apellido.</div>
 				
-				<input type="text" class="form-control" formControlName="gender" placeholder="Genero">
+				<select class="form-control" formControlName="gender">
+					<option value="">Género</option> 
+  					<option value="Masculino">Masculino</option>
+  					<option value="Femenino">Femenino</option>
+ 				</select>
 			
-		        <div class="alert alert-danger" *ngIf="!myForm.controls['gender'].valid && myForm.controls['gender'].touched ">Tu debes colocar un Genero.</div>
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['gender'].valid && myForm.controls['gender'].touched ">Tu debes colocar un género.</div>
 
-		        <input type="date" class="form-control" formControlName="birthdate" placeholder="fecha de nacimiento">
+		        <input type="date" class="form-control" formControlName="birthdate" placeholder="Fecha de Nacimiento">
 			
 		        <div class="alert alert-danger" *ngIf="!myForm.controls['birthdate'].valid && myForm.controls['birthdate'].touched ">Tu debes colocar una fecha.</div>
 
 			    <input type="email" class="form-control" formControlName="email" placeholder="Correo">
 			
-		        <div class="alert alert-danger" *ngIf="!myForm.controls['email'].valid && myForm.controls['email'].touched ">Tu debes colocar un correo valido.</div>
+		        <div class="alert alert-danger" *ngIf="!myForm.controls['email'].valid && myForm.controls['email'].touched ">Tu debes colocar un correo válido.</div>
 
 			    <input type="password" class="form-control" formControlName="password" placeholder="Contraseña" >
-			    <div class="alert alert-danger" *ngIf="!myForm.controls['password'].valid && myForm.controls['password'].touched ">Tu debes colocar un contraseña valida.</div>
+			    <div class="alert alert-danger" *ngIf="!myForm.controls['password'].valid && myForm.controls['password'].touched ">Tu debes colocar un contraseña válida (6 caracteres mínimos).</div>
 		    </div>
 	
 		    <div align="center">

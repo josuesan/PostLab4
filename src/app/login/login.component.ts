@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import {MessagesModule} from 'primeng/primeng';
+
+
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -9,6 +13,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 export class LoginComponent implements OnInit {
 
 	public myForm: FormGroup; 
+  msgs: MessagesModule[] = [];
   	constructor(public fb: FormBuilder, public http: Http) { 
   		
   		this.myForm = this.fb.group({
@@ -29,8 +34,20 @@ export class LoginComponent implements OnInit {
 
   	this.http.post('http://localhost:5000/login', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
-            alert(data.json().success); 
-            console.log(data.json());        
+            if (data.json().error == true){
+                this.msgs = [];
+                this.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
+                setTimeout(() => {
+                  this.msgs = [];}, 5000);
+              }
+              else{  
+                this.msgs = [];
+                this.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
+                setTimeout(() => {
+                this.msgs = [];
+                //this.router.navigate(['./login']);
+                }, 5000);
+              }       
       }, error => {
           console.log(error.json());
       });

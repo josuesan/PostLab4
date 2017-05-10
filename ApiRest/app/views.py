@@ -35,12 +35,17 @@ def log_user():
 		usuario = new['username']
 		clave = new['password']
 		if user.login(usuario,clave):
-			respuesta = {'error':False,'mensaje':'Usuario logueado.'}
-			#create_session(usuario, user.is_Admin(username))
+			respuesta = {'error':False,'mensaje':'Inicio de sesión exitoso.'}
+			create_session(usuario, user.is_Admin(usuario))
 			return json.dumps(respuesta)
 		else:
-			respuesta = {'error':True,'mensaje':'Contrasena o Usuario incorrectos'} 
+			respuesta = {'error':True,'mensaje':'Usuario o Contraseña incorrectos.'} 
 			return json.dumps(respuesta)
+	else:
+		respuesta = {'error':True,'mensaje': 'Ya iniciaste sesión.'} 
+		return json.dumps(respuesta)
+
+
 
 # @app.route("/datosregistro", methods = ['GET', 'POST'])
 # def registro_datos():
@@ -79,7 +84,7 @@ def Register():
 			db.session.add(user)
 			db.session.commit()
 
-			respuesta = {'error':False,'mensaje':'Registro exitoso.'}
+			respuesta = {'error':False,'mensaje':'Registro exitoso, serás redireccionado al inicio de sesión.'}
 			return json.dumps(respuesta)
 	
 
