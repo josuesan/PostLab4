@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
+import { MsgService } from './msg.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,9 @@ import { Http } from '@angular/http';
 
 export class AppComponent {
   title = "3J's STORE";
+
+  constructor(public servicio: MsgService) {
+  }
 
 }
 

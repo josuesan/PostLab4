@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {MessagesModule} from 'primeng/primeng';
+import {Message} from 'primeng/primeng';
 
 @Injectable()
 export class MsgService {
-  msgs: MessagesModule[] = [];
+  public msgs: Message[] = [];
 }

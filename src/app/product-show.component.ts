@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import {MessagesModule} from 'primeng/primeng';
+import { MsgService } from './msg.service';
+
 
 declare var jQuery:any;
 declare var $:any;
@@ -14,9 +16,7 @@ declare var $:any;
 export class Product {
   product='';
 
-  msgs: MessagesModule[] = [];
-
-	constructor(public http: Http) { }
+	constructor(public http: Http, public servicio: MsgService) { }
 
 	@Output() Refresh = new EventEmitter();
 	@Output() Edit = new EventEmitter();
@@ -39,19 +39,19 @@ export class Product {
 		this.http.delete(url)
 			.subscribe(data => {
 				if(data.json().error == true){
-					this.msgs = [];
-                	this.msgs.push({severity:'error', summary:'', detail:data.json().mensaje});
+					this.servicio.msgs = [];
+                	this.servicio.msgs.push({severity:'error', summary:'', detail:data.json().mensaje});
                 	setTimeout(() => {
-    					this.msgs = []; }, 5000);
+    					this.servicio.msgs = []; }, 5000);
 				}
 		      	else
 		      	{
-		            this.msgs = [];
-                	this.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
+		            this.servicio.msgs = [];
+                	this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
 		            this.show(0);               	
 		            this.Refresh.emit();
 		            setTimeout(() => {
-    					this.msgs = []; }, 5000);
+    					this.servicio.msgs = []; }, 5000);
 		      	}
       		}, error => {
           		console.log(error.json());
@@ -66,10 +66,10 @@ export class Product {
 		this.http.get(url)
 			.subscribe(data => {
 					if(data.json().error == true){
-						this.msgs = [];
-                		this.msgs.push({severity:'error', summary:'', detail:data.json().mensaje});
+						this.servicio.msgs = [];
+                		this.servicio.msgs.push({severity:'error', summary:'', detail:data.json().mensaje});
                 		setTimeout(() => {
-    					this.msgs = []; }, 5000);
+    					this.servicio.msgs = []; }, 5000);
 					}
       				else
       				{
