@@ -6,7 +6,7 @@ from app import db
 
 class productos(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
-	nombre = db.Column(db.String(50),unique=True)
+	nombre = db.Column(db.VARCHAR(500),unique=True)
 	precio = db.Column(db.Integer)
 	foto = db.Column(db.VARCHAR(500))
 	descripcion = db.Column(db.VARCHAR(500))

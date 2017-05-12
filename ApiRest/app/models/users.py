@@ -14,8 +14,6 @@ class Users(db.Model):
 	gender = db.Column(db.String(50))
 	admin = db.Column(db.Boolean)
 
-
-
 	def create_user(self, username, email, password, name, lastName, birthdate,gender,admin):
 		self.name = name
 		self.lastName = lastName
