@@ -16,8 +16,13 @@ db.create_all()
 
 csrf = CsrfProtect()
 def create_session( username, admin):
-	session['username'] = username
-	session['admin'] = admin
+	#session['username'] = username
+	#session['admin'] = admin
+	
+	user =Users()
+	token = user.create_password("secret")
+	session['username'] = token
+	return token
 
 @app.route('/logout')
 def logout():
@@ -25,18 +30,23 @@ def logout():
 		session.pop('username')		
 		session.pop('admin')	
 
+@app.route('/toke', methods = ['GET'])
+def tokem():
+	user =Users()
+	token = user.create_password("secret")
+	respuesta = {'error':False,'mensaje': token} 
+	return json.dumps(respuesta)
+
 @app.route("/login", methods = ['POST'])
 def log_user():
 	if not 'username' in session:
 		user = Users()
 		new = request.get_json()
-		print(new)
-		print(new['username'])
 		usuario = new['username']
 		clave = new['password']
 		if user.login(usuario,clave):
-			respuesta = {'error':False,'mensaje':'Inicio de sesión exitoso.'}
-			create_session(usuario, user.is_Admin(usuario))
+			res = create_session(usuario, user.is_Admin(usuario))
+			respuesta = {'error':False,'mensaje':'Inicio de sesión exitoso.','token': res}
 			return json.dumps(respuesta)
 		else:
 			respuesta = {'error':True,'mensaje':'Usuario o Contraseña incorrectos.'} 

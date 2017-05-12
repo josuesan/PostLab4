@@ -42,11 +42,12 @@ export class LoginComponent implements OnInit {
               }
               else{  
                 this.msgs = [];
-                this.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
+                this.msgs.push({severity:'success', summary:'', detail:data.json().token});
                 setTimeout(() => {
                 this.msgs = [];
                 //this.router.navigate(['./login']);
                 }, 5000);
+               
               }       
       }, error => {
           console.log(error.json());

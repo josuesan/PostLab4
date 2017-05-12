@@ -9,6 +9,5 @@ import { Http } from '@angular/http';
 
 export class AppComponent {
   title = "3J's STORE";
-
 }
 
