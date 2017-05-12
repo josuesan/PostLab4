@@ -11,6 +11,7 @@ import { Product } from './product-show.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AppRoutingModule } from './app-routing.module';
+import { MsgService } from './msg.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     MessagesModule
   ],
-  providers: [],
+  providers: [MsgService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

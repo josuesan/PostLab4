@@ -1,7 +1,7 @@
 import { Component, ViewChild, EventEmitter, Output  } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import { Product }  from './product-show.component';
-import {MessagesModule} from 'primeng/primeng';
+import { MsgService } from './msg.service';
 
 @Component({
   selector: 'products-list',
@@ -10,8 +10,6 @@ import {MessagesModule} from 'primeng/primeng';
 
 export class ProductsList {
   products;
-  msgs: MessagesModule[] = [];
-
 
   @ViewChild(Product)
   private P: Product;
@@ -19,15 +17,15 @@ export class ProductsList {
   	@Output() Editar = new EventEmitter();
 
 	
-	constructor(public http: Http) {
+	constructor(public http: Http, public servicio: MsgService) {
 		this.http.get('http://localhost:5000/listar')
 			.subscribe(data => {
 				if (data.json().error == true){
-					this.msgs = [];
-        			this.msgs.push({severity:'warn', summary:'Alerta', detail:data.json().mensaje});
+					this.servicio.msgs = [];
+        			this.servicio.msgs.push({severity:'warn', summary:'Alerta', detail:data.json().mensaje});
 					this.products = [];
 					setTimeout(() => {
-    					this.msgs = []; }, 5000);
+    					this.servicio.msgs = []; }, 5000);
 				}
 				else{
 					this.products = data.json();
@@ -41,11 +39,11 @@ export class ProductsList {
 		this.http.get('http://localhost:5000/listar')
 			.subscribe(data => {
 				if (data.json().error == true){
-					this.msgs = [];
-        			this.msgs.push({severity:'warn', summary:'Alerta', detail:data.json().mensaje});
+					this.servicio.msgs = [];
+        			this.servicio.msgs.push({severity:'warn', summary:'Alerta', detail:data.json().mensaje});
 					this.products = [];
 					setTimeout(() => {
-    					this.msgs = []; }, 5000);
+    					this.servicio.msgs = []; }, 5000);
 				}
 				else{
 					this.products = data.json();
