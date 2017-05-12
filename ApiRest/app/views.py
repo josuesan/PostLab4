@@ -19,8 +19,7 @@ csrf = CsrfProtect()
 #########################################------------USUARIOS-------------------#####################################
 def create_session( username, admin):
 	#session['username'] = username
-	#session['admin'] = admin
-	
+	#session['admin'] = admin	
 	user =Users()
 	token = user.create_password("secret")
 	session['username'] = token
@@ -41,6 +40,11 @@ def tokem():
 
 @app.route("/login", methods = ['POST'])
 def log_user():
+	if  request.headers['Authorization']:
+		if request.headers['Authorization'] == session['username'] :
+			respuesta = {'error':True,'mensaje': 'Ya iniciaste sesión.'} 
+			return json.dumps(respuesta)
+
 	if not 'username' in session:
 		user = Users()
 		new = request.get_json()

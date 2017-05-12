@@ -12,6 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MsgService } from './msg.service';
+import { LocalStorageService } from './localstorage.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,10 @@ import { MsgService } from './msg.service';
     AppRoutingModule,
     MessagesModule
   ],
-  providers: [MsgService],
+  providers: [
+      MsgService,
+      LocalStorageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

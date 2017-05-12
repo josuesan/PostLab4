@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MsgService } from '../msg.service';
+import { LocalStorageService } from '../localstorage.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import { MsgService } from '../msg.service';
 export class LoginComponent implements OnInit {
 
 	public myForm: FormGroup; 
-  	constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService) { 
+  	constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService,public serv: LocalStorageService) { 
   		
   		this.myForm = this.fb.group({
 	  	username: ["",Validators.required],
@@ -29,6 +30,10 @@ export class LoginComponent implements OnInit {
   	var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
+    if (this.serv.get_local_storage()!= null) {
+      headers.append( 'Authorization', this.serv.get_local_storage());
+    }
+
   	this.http.post('http://localhost:5000/login', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
             if (data.json().error == true){
@@ -44,7 +49,9 @@ export class LoginComponent implements OnInit {
                 this.servicio.msgs = [];
                 //this.router.navigate(['./login']);
                 }, 5000);
-               
+                var token = data.json().token;
+                console.log(data.json().token);
+                this.serv.set_local_storage(token);
               }       
       }, error => {
           console.log(error.json());
