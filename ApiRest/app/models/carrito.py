@@ -17,8 +17,8 @@ class Carrito(db.Model):
 		self.id_prod = id_prod
 		prod = productos()
 		product = prod.get_prod(id_prod)
-		self.nombre_producto = product.name
-		self.precio = product.price
+		self.nombre_producto = product['name']
+		self.precio = product['price']
 		self.cantidad = 1
 
 	def adm_cant(self, id_user, id_prod, opcion):
@@ -59,7 +59,7 @@ class Carrito(db.Model):
 		return jsona
 
 	def delete_prod(self, id_prod, id_user):		
-		aux = Carrito.query.filter_by(id_prod=id_prod, id_user=id_user)
+		aux = Carrito.query.filter_by(id_prod=id_prod, id_user=id_user).first()
 		if aux is None:
 			return 0 
 		return aux 

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { MsgService } from './msg.service';
+import { LocalStorageService } from './localstorage.service';
+
+
 
 @Component({
   selector: 'app-root',
@@ -11,7 +14,7 @@ import { MsgService } from './msg.service';
 export class AppComponent {
   title = "3J's STORE";
 
-  constructor(public servicio: MsgService) {
+  constructor(public servicio: MsgService, public serv: LocalStorageService) {
   }
 
 }

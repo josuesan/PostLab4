@@ -3,6 +3,8 @@ import { Http, Headers} from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ProductsList }  from './products-list.component';
 import { MsgService } from './msg.service';
+import { LocalStorageService } from './localstorage.service';
+
 
 
 declare var jQuery:any;
@@ -29,12 +31,16 @@ export class ProductsForm implements AfterViewInit{
   private PL: ProductsList;
 
   ngAfterViewInit() {}
-  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService) {}
+  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService) {}
 
   new () {
   	let formData = this.myForm.value;
   	var headers = new Headers();
     headers.append('Content-Type', 'application/json');
+      if (this.serv.get_local_storage()!= null) {
+          headers.append( 'Authorization', this.serv.get_local_storage());
+          headers.append( 'username', this.serv.get_username());
+      }
 
   	this.http.post('http://localhost:5000/crear', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
@@ -54,6 +60,11 @@ export class ProductsForm implements AfterViewInit{
     let formData = this.myForm.value;
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
+
+     if (this.serv.get_local_storage()!= null) {
+          headers.append( 'Authorization', this.serv.get_local_storage());
+          headers.append( 'username', this.serv.get_username());
+      }
 
     this.http.put('http://localhost:5000/editar/'+id, JSON.stringify(formData),{ headers: headers })      
     .subscribe(data => {

@@ -1,41 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Headers} from '@angular/http';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MsgService } from '../msg.service';
 import { LocalStorageService } from '../localstorage.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-logout',
+  templateUrl: './logout.component.html',
+  styleUrls: ['./logout.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LogoutComponent implements OnInit {
 
-	public myForm: FormGroup; 
-  	constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService,public serv: LocalStorageService) { 
-  		
-  		this.myForm = this.fb.group({
-	  	username: ["",Validators.required],
-	  	password: ["",Validators.compose([Validators.required,Validators.minLength(6)])]
-  		});
+  constructor(public http: Http, public servicio: MsgService, public serv: LocalStorageService) {}
 
-  	}
+  ngOnInit() {
+  }
 
-  	ngOnInit() {
-  	}
-
-  log () {
-  	let formData = this.myForm.value;
-  	console.log(formData.username);
-  	var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
+  logout (){
+    var headers = new Headers();
     if (this.serv.get_local_storage()!= null) {
       headers.append( 'Authorization', this.serv.get_local_storage());
+      headers.append( 'username', this.serv.get_username());
     }
 
-  	this.http.post('http://localhost:5000/login', JSON.stringify(formData),{ headers: headers })      
-  	.subscribe(data => {
+    this.http.post('http://localhost:5000/logout',{ headers: headers })      
+    .subscribe(data => {
             if (data.json().error == true){
                 this.servicio.msgs = [];
                 this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
@@ -50,16 +38,13 @@ export class LoginComponent implements OnInit {
                 //this.router.navigate(['./login']);
                 }, 5000);
                 var token = data.json().token;
-                console.log(data.json().token);
-                this.serv.set_local_storage(token);
-                console.log(formData.username);
-                this.serv.set_username(formData.username);
+                this.serv.delete_local_storage();
+                this.serv.delete_username();
               }       
       }, error => {
           console.log(error.json());
       });
 
-  }
 
-  
+  }
 }

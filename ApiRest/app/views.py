@@ -9,6 +9,7 @@ from app.models.users import Users
 from app.models.products import productos
 from app.models.carrito import Carrito
 from app.models.comments import Comentarios
+from app.models.session import Session
 from flask_cors import CORS, cross_origin
 from flask_wtf import CsrfProtect
 from app import app, db
@@ -16,62 +17,90 @@ CORS(app)
 db.create_all()
 csrf = CsrfProtect()
 
+
 #########################################------------USUARIOS-------------------#####################################
-def create_session( username, admin):
+
+def create_session(username, admin):
 	#session['username'] = username
 	#session['admin'] = admin	
 	user =Users()
 	token = user.create_password("secret")
-	session['username'] = token
+	sesion = Session()
+	sesion.create_session(username,token,admin)
+	db.session.add(sesion)
+	db.session.commit()
 	return token
 
-@app.route('/logout')
+@app.route('/logout', methods = ['GET'])
 def logout():
-	if 'username' in session:
-		session.pop('username')		
-		session.pop('admin')	
+	sesion = Session()
+	usuario = request.headers.get('username')
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	if token_angular:
+		if sesion.exist_session(usuario, token_angular):
+			deletesesion = sesion.delete_session(usuario)
+
+			if deletesesion == 0:
+				respuesta = {'error':True,'mensaje':'No has iniciado sesión.'}
+				return json.dumps(respuesta)
+			else: 
+				db.session.delete(deletesesion)
+				db.session.commit()
+				respuesta = {'error':False,'mensaje':'Cerraste sesión correctamente'}
+				return json.dumps(respuesta)
+
+	respuesta = {'error':True,'mensaje': 'Ya has iniciado sesión.'} 
+	return json.dumps(respuesta)	
 
 @app.route('/toke', methods = ['GET'])
 def tokem():
-	user =Users()
+	user = Users()
 	token = user.create_password("secret")
 	respuesta = {'error':False,'mensaje': token} 
 	return json.dumps(respuesta)
 
 @app.route("/login", methods = ['POST'])
 def log_user():
-	if  request.headers['Authorization']:
-		if request.headers['Authorization'] == session['username'] :
-			respuesta = {'error':True,'mensaje': 'Ya iniciaste sesión.'} 
+	sesion = Session()
+	new = request.get_json()
+	usuario = new['username']
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	if token_angular:
+		if sesion.exist_session(usuario, token_angular):
+			respuesta = {'error':True,'mensaje': 'Ya has iniciado sesión.'} 
 			return json.dumps(respuesta)
 
-	if not 'username' in session:
-		user = Users()
-		new = request.get_json()
-		usuario = new['username']
-		clave = new['password']
-		if user.login(usuario,clave):
-			res = create_session(usuario, user.is_Admin(usuario))
-			respuesta = {'error':False,'mensaje':'Inicio de sesión exitoso.','token': res}
-			return json.dumps(respuesta)
-		else:
-			respuesta = {'error':True,'mensaje':'Usuario o Contraseña incorrectos.'} 
-			return json.dumps(respuesta)
-	else:
-		respuesta = {'error':True,'mensaje': 'Ya iniciaste sesión.'} 
+	user = Users()
+	clave = new['password']
+	if user.login(usuario,clave):
+		res = create_session(usuario, user.is_Admin(usuario))
+		respuesta = {'error':False,'mensaje':'Inicio de sesión exitoso.','token': res}
 		return json.dumps(respuesta)
-
-@app.route("/perfil/<ide>", methods = ['GET'])
-def perfil(ide):
-	if 'username' in session:
-		user = Users()
-		datos = user.get_user(ide)
-		return json.dumps(datos)
 	else:
-		respuesta = {'error':True,'mensaje': 'No has iniciado sesión.'} 
+		respuesta = {'error':True,'mensaje':'Usuario o Contraseña incorrectos.'} 
 		return json.dumps(respuesta)
+	# else:
+	# 	respuesta = {'error':True,'mensaje': 'Ya has iniciado sesión.'} 
+	# 	return json.dumps(respuesta)
 
+@app.route("/perfil", methods = ['GET'])
+def perfil():
+	sesion = Session()
+	new = request.get_json()
+	usuario = request.headers.get('username')
+	token_angular = request.headers.get('Authorization')
+	print(usuario)
+	#Verificamos si el usuario tiene una sesión activa
+	if token_angular:
+		if sesion.exist_session(usuario, token_angular):
+			user = Users()
+			datos = user.get_user(usuario)
+			return json.dumps(datos)
 
+	respuesta = {'error':True,'mensaje': 'No has iniciado sesión.'} 
+	return json.dumps(respuesta)
 
 
 # @app.route("/datosregistro", methods = ['GET', 'POST'])
@@ -87,32 +116,39 @@ def perfil(ide):
 
 @app.route('/registro', methods = ['POST'])
 def Register():
-	if not 'username' in session:
-		user = Users()
-		new = request.get_json()
-
-		(exist,campo) = user.exist_user(new['username'],new['email'])
-		if exist == 1:
-			if campo == 'email':
-				respuesta = {'error':True,'mensaje':'Email registrado.'}
+	sesion = Session()
+	new = request.get_json()
+	usuario = new['username']
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	if not token_angular:
+		if not sesion.exist_session(usuario, token_angular):
+			user = Users()
+			(exist,campo) = user.exist_user(new['username'],new['email'])
+			if exist == 1:
+				if campo == 'email':
+					respuesta = {'error':True,'mensaje':'Email registrado.'}
+				else:
+					respuesta = {'error':True,'mensaje':'Username registrado.'}
+				
+				return json.dumps(respuesta)
 			else:
-				respuesta = {'error':True,'mensaje':'Username registrado.'}
-			
-			return json.dumps(respuesta)
-		else:
-			user.create_user(new['username'],
-						new['email'],
-						new['password'],
-						new['name'],
-						new['lastname'],
-						new['birthdate'],
-						new['gender'],
-						False)
-			db.session.add(user)
-			db.session.commit()
+				user.create_user(new['username'],
+							new['email'],
+							user.create_password(new['password']),
+							new['name'],
+							new['lastname'],
+							new['birthdate'],
+							new['gender'],
+							False)
+				db.session.add(user)
+				db.session.commit()
 
-			respuesta = {'error':False,'mensaje':'Registro exitoso, serás redireccionado al inicio de sesión.'}
-			return json.dumps(respuesta)
+				respuesta = {'error':False,'mensaje':'Registro exitoso, serás redireccionado al inicio de sesión.'}
+				return json.dumps(respuesta)
+
+	respuesta = {'error':True,'mensaje':'Ya has iniciado sesión'}
+	return json.dumps(respuesta)
 	
 
 
@@ -150,58 +186,82 @@ def part(ide):
 
 @app.route('/crear', methods = ['POST'])
 def create():	
-	if 'username' in session:
-		oneProd =productos()
-		product = request.get_json()
-		oneProd.create_prod(product['name'],product['price'],product['img'],product['description'],product['category'],product['sell'])
-		db.session.add(oneProd)
-		db.session.commit()
-		respuesta = {'error':False,'mensaje':'Producto creado exitosamente.'}
-		return json.dumps(respuesta)
+	sesion = Session()
+	usuario = request.headers.get('username')
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	if token_angular:
+		if sesion.exist_session(usuario, token_angular):
+			oneProd =productos()
+			product = request.get_json()
+			oneProd.create_prod(product['name'],product['price'],product['img'],product['description'],product['category'],product['sell'])
+			db.session.add(oneProd)
+			db.session.commit()
+			respuesta = {'error':False,'mensaje':'Producto creado exitosamente.'}
+			return json.dumps(respuesta)
+	
+	respuesta = {'error':True,'mensaje':'Debes iniciar sesión.'}
+	return json.dumps(respuesta)
 
 
 @app.route('/editar/<ide>', methods=['PUT'])
 def edit(ide):
-	if 'username' in session:
-		if ide.isdigit():
-			_id = ide
-			prod =productos()
-			oneProd = prod.get_prod(_id)
-			if oneProd == 0:
-				respuesta = {'error':True,'mensaje':'Producto no existe'}
-				return json.dumps(respuesta)
-			else:
-				product = request.get_json()
-				#obtengo el objeto del producto de la bd para poder editarlo y obtengo el nuevo registro a almacenar
-				(objProd,prodEdit) = prod.set_prod(_id, product['name'], product['price'], product['img'], product['description'], product['category'], product['sell'])
+	sesion = Session()
+	usuario = request.headers.get('username')
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	if token_angular:
+		if sesion.exist_session(usuario, token_angular):
+			if ide.isdigit():
+				_id = ide
+				prod =productos()
+				oneProd = prod.get_prod(_id)
+				if oneProd == 0:
+					respuesta = {'error':True,'mensaje':'Producto no existe'}
+					return json.dumps(respuesta)
+				else:
+					product = request.get_json()
+					#obtengo el objeto del producto de la bd para poder editarlo y obtengo el nuevo registro a almacenar
+					(objProd,prodEdit) = prod.set_prod(_id, product['name'], product['price'], product['img'], product['description'], product['category'], product['sell'])
 
-				objProd.update(prodEdit)  #edito el artículo
-				db.session.commit() #guardo los cammbios
-				respuesta = {'error':False,'mensaje':'Producto editado exitosamente.'}
-				return json.dumps(respuesta)
+					objProd.update(prodEdit)  #edito el artículo
+					db.session.commit() #guardo los cammbios
+					respuesta = {'error':False,'mensaje':'Producto editado exitosamente.'}
+					return json.dumps(respuesta)
 
-		respuesta = {'error':True,'mensaje':'Producto no existe.'}
-		return json.dumps(respuesta)
+			respuesta = {'error':True,'mensaje':'Producto no existe.'}
+			return json.dumps(respuesta)
+	
+	respuesta = {'error':True,'mensaje':'Debes iniciar sesión.'}
+	return json.dumps(respuesta)
 
 
 @app.route('/borrar/<ide>', methods=['DELETE'])
 def delete(ide):
-	if 'username' in session:
-		if ide.isdigit():
-			_id = ide	
-			prod =productos()
-			oneProd = prod.delete_prod(_id)
-			if oneProd == 0:
-				respuesta = {'error':True,'mensaje':'Producto no existe.'}
-				return json.dumps(respuesta)
-			else: 
-				db.session.delete(oneProd)
-				db.session.commit()
-				respuesta = {'error':False,'mensaje':'Producto borrado exitosamente.'}
-				return json.dumps(respuesta)
+	sesion = Session()
+	usuario = request.headers.get('username')
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	if token_angular:
+		if sesion.exist_session(usuario, token_angular):
+			if ide.isdigit():
+				_id = ide	
+				prod =productos()
+				oneProd = prod.delete_prod(_id)
+				if oneProd == 0:
+					respuesta = {'error':True,'mensaje':'Producto no existe.'}
+					return json.dumps(respuesta)
+				else: 
+					db.session.delete(oneProd)
+					db.session.commit()
+					respuesta = {'error':False,'mensaje':'Producto borrado exitosamente.'}
+					return json.dumps(respuesta)
 
-		respuesta = {'error':True,'mensaje':'Producto no existe.'}
-		return json.dumps(respuesta)
+			respuesta = {'error':True,'mensaje':'Producto no existe.'}
+			return json.dumps(respuesta)
+
+	respuesta = {'error':True,'mensaje':'Debes iniciar sesión.'}
+	return json.dumps(respuesta)
 
 
 
@@ -333,4 +393,5 @@ def deletecomentario(user,comment):
 				db.session.commit()
 				respuesta = {'error':False,'mensaje':'Comentario borrado exitosamente.'}
 				return json.dumps(respuesta)
+
 

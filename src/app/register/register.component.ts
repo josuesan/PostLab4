@@ -4,6 +4,8 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import {MessagesModule} from 'primeng/primeng';
 import {Router} from '@angular/router';
 import { MsgService } from '../msg.service';
+import { LocalStorageService } from '../localstorage.service';
+
 
 
 @Component({
@@ -17,7 +19,7 @@ export class RegisterComponent implements OnInit {
   public myForm: FormGroup; 
 
 
-  	constructor(public fb: FormBuilder, public http: Http, private router: Router, public servicio: MsgService) { 
+  	constructor(public fb: FormBuilder, public http: Http, private router: Router, public servicio: MsgService, public serv: LocalStorageService) { 
   		
   		this.myForm = this.fb.group({
       username: ["",Validators.required],
@@ -37,6 +39,11 @@ export class RegisterComponent implements OnInit {
   	let formData = this.myForm.value;
   	var headers = new Headers();
     headers.append('Content-Type', 'application/json');
+
+    if (this.serv.get_local_storage()!= null) {
+      headers.append( 'Authorization', this.serv.get_local_storage());
+    }
+
     this.http.post('http://localhost:5000/registro', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
               if (data.json().error == true){

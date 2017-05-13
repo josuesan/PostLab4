@@ -38,7 +38,7 @@ class Comentarios(db.Model):
 		return jsona
 
 	def delete_comment(self, id_comment, id_user):		
-		aux = Comentarios.query.filter_by(id=id_comment, id_user=id_user)
+		aux = Comentarios.query.filter_by(id=id_comment, id_user=id_user).first()
 		if aux is None:
 			return 0 
 		return aux 
