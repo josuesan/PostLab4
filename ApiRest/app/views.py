@@ -131,8 +131,29 @@ def Register():
 
 	respuesta = {'error':True,'mensaje':'Ya has iniciado sesión'}
 	return json.dumps(respuesta)
-	
 
+@app.route('/perfil/editar', methods=['POST'])
+def editPerfil():
+	sesion = Session()
+	usuario = request.headers.get('username')
+	token_angular = request.headers.get('Authorization')
+	#Verificamos si el usuario tiene una sesión activa
+	print(token_angular)
+	if token_angular:
+		print("hola si hay token")
+		if sesion.exist_session(usuario, token_angular):
+			print("hola si hay sesion")
+			user = Users()
+			NewUser = request.get_json()
+			#obtengo el objeto del producto de la bd para poder editarlo y obtengo el nuevo registro a almacenar
+			(objUser,UserEdit) = user.set_user(NewUser['username'], NewUser['email'], NewUser['password'], NewUser['name'], NewUser['lastname'], NewUser['birthdate'],NewUser['gender'])
+			objUser.update(UserEdit)  #edito el usuario
+			db.session.commit() #guardo los cammbios
+			respuesta = {'error':False,'mensaje':'Perfil editado exitosamente.'}
+			return json.dumps(respuesta)
+	else:		
+		respuesta = {'error':True,'mensaje':'Debes iniciar sesión.',"token" : token_angular}
+		return json.dumps(respuesta)	
 
 #########################################------------PRODUCTOS-------------------#####################################
 @app.route('/listar', methods = ['GET'])

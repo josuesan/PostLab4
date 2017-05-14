@@ -55,10 +55,12 @@ class Users(db.Model):
 			return 0
 		return {'nombre': aux.name,'apellido':aux.lastName,'username': aux.username,'email':aux.email,'password': aux.password, 'nacimiento': fecha, 'genero':aux.gender}
 
-	
-
 	def create_password(self, pwd):
 		return generate_password_hash(pwd)
 
 	def verify_password(self, session, token):
 		return check_password_hash(session,token)	
+
+	def set_user(self, username, email, password, name, lastName, birthdate,gender):	
+		#Retorno el objecto de la bd y el registro nuevo a almacenar
+		return Users.query.filter_by(username=username), {'username': username,'email': email,'password': password,'name': name,'lastName': lastName,'birthdate': birthdate,'gender': gender}

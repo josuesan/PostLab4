@@ -25,8 +25,7 @@ export class PerfilComponent implements OnInit {
   		});
   }
 
-  ngOnInit() {
- 
+  ngOnInit() { 
     var headers = new Headers();
     if (this.serv.get_local_storage()!= null) {
       headers.append( 'Authorization', this.serv.get_local_storage());
@@ -54,7 +53,38 @@ export class PerfilComponent implements OnInit {
       }, error => {
           console.log(error.json());
       });
+  }
 
-
+  EditPerfil (){
+    var headers = new Headers();
+    if (this.serv.get_local_storage()!= null) {
+      headers.append( 'Authorization', this.serv.get_local_storage());
+      console.log(headers);
+      headers.append( 'username', this.serv.get_username());
+    }
+    console.log(this.serv.get_username())
+    console.log(headers);
+    this.http.post('http://localhost:5000/perfil/editar',{ headers: headers })      
+    .subscribe(data => {
+            if (data.json().error == true){
+                this.servicio.msgs = [];
+                console.log(data.json());
+                this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
+                setTimeout(() => {
+                  this.servicio.msgs = [];}, 5000);
+              }
+              else{  
+                this.myForm.setValue({username:data.json().username,
+                  email:data.json().email,
+                  name:data.json().nombre,
+                  lastname:data.json().apellido,
+                  birthdate:data.json().nacimiento,
+                  gender:data.json().genero,
+                  password:''
+                });
+              }       
+      }, error => {
+          console.log(error.json());
+      });
   }
 }
