@@ -30,6 +30,14 @@ class Session(db.Model):
 			else:
 				return 0
 
+	def exist_sesion(self, username):
+		aux = Session.query.filter_by(username=username).first()
+		if aux is None:
+			return 0
+		else:
+			return 1
+
+
 	def delete_session(self, username):		
 		aux = Session.query.filter_by(username=username).first()
 		if aux is None:

@@ -20,9 +20,7 @@ csrf = CsrfProtect()
 
 #########################################------------USUARIOS-------------------#####################################
 
-def create_session(username, admin):
-	#session['username'] = username
-	#session['admin'] = admin	
+def create_session(username, admin):	
 	user =Users()
 	token = user.create_password("secret")
 	sesion = Session()
@@ -53,13 +51,6 @@ def logout():
 	respuesta = {'error':True,'mensaje': 'Ya has iniciado sesión.'} 
 	return json.dumps(respuesta)	
 
-@app.route('/toke', methods = ['GET'])
-def tokem():
-	user = Users()
-	token = user.create_password("secret")
-	respuesta = {'error':False,'mensaje': token} 
-	return json.dumps(respuesta)
-
 @app.route("/login", methods = ['POST'])
 def log_user():
 	sesion = Session()
@@ -73,17 +64,20 @@ def log_user():
 			return json.dumps(respuesta)
 
 	user = Users()
-	clave = new['password']
-	if user.login(usuario,clave):
+	clave = new['password']		
+	
+	if sesion.exist_sesion(usuario) :
+		deletesesion = sesion.delete_session(usuario)
+		db.session.delete(deletesesion)
+		db.session.commit()		
+	
+	if user.login(usuario,clave) :
 		res = create_session(usuario, user.is_Admin(usuario))
 		respuesta = {'error':False,'mensaje':'Inicio de sesión exitoso.','token': res}
 		return json.dumps(respuesta)
 	else:
 		respuesta = {'error':True,'mensaje':'Usuario o Contraseña incorrectos.'} 
 		return json.dumps(respuesta)
-	# else:
-	# 	respuesta = {'error':True,'mensaje': 'Ya has iniciado sesión.'} 
-	# 	return json.dumps(respuesta)
 
 @app.route("/perfil", methods = ['GET'])
 def perfil():
@@ -100,19 +94,7 @@ def perfil():
 			return json.dumps(datos)
 
 	respuesta = {'error':True,'mensaje': 'No has iniciado sesión.'} 
-	return json.dumps(respuesta)
-
-
-# @app.route("/datosregistro", methods = ['GET', 'POST'])
-# def registro_datos():
-# 	if request.method == 'POST':
-# 		user = Users()
-# 		usuario = request.form['usuario']
-# 		clave = request.form['clave']
-# 		respuesta = user.get_user(usuario)
-# 		return json.dumps(respuesta)
-# 	return render_template('login.html') 
-        
+	return json.dumps(respuesta)   
 
 @app.route('/registro', methods = ['POST'])
 def Register():

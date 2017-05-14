@@ -22,18 +22,38 @@ export class RegisterComponent implements OnInit {
   	constructor(public fb: FormBuilder, public http: Http, private router: Router, public servicio: MsgService, public serv: LocalStorageService) { 
   		
   		this.myForm = this.fb.group({
-      username: ["",Validators.required],
-	  	email: ["",Validators.compose([Validators.required,Validators.email ])],
-	  	password: ["",Validators.compose([Validators.required,Validators.minLength(6)])],
-      name: ["",Validators.required],
-      lastname: ["",Validators.required],
-      birthdate: ["",Validators.required],
-      gender: ["",Validators.compose([Validators.required,Validators.minLength(6)])]
-  		});
+        username: ["",Validators.required],
+  	  	email: ["",Validators.compose([Validators.required,Validators.email ])],
+  	  	password: ["",Validators.compose([Validators.required,Validators.minLength(6)])],
+        repeat: ["",Validators.required],
+        name: ["",Validators.required],
+        lastname: ["",Validators.required],
+        birthdate: ["",Validators.required],
+        gender: ["",Validators.compose([Validators.required,Validators.minLength(6)])]
+      });
   	}
 
   	ngOnInit() {
   	}
+
+ /* checkPassword( fieldControl: FormControl) {
+    console.log("hola");
+    if (fieldControl.value.password==fieldControl.value.repeat){
+      return true;
+    }
+    else{
+      return false;
+    } 
+  }*/
+
+  check(value1, value2) {
+    if (value1 == value2){
+      return true;
+    }
+    else{
+      return false;
+    } 
+  }
 
   register () {
   	let formData = this.myForm.value;

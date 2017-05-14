@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
 
   	this.http.post('http://localhost:5000/login', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
+              console.log(data.json());
             if (data.json().error == true){
                 this.servicio.msgs = [];
                 this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});

@@ -7,6 +7,22 @@ export class LocalStorageService {
 
   constructor(public http: Http, public servicio: MsgService) {}
 
+  public get_no_exist_user(){
+    if (localStorage.getItem('Session-Token') == null) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  public get_exist_user(){
+    if (localStorage.getItem('Session-Token') == null) {
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
   public get_local_storage(){
     return localStorage.getItem('Session-Token');
   }
@@ -37,7 +53,8 @@ export class LocalStorageService {
     sessionStorage.removeItem('Session-Token');
   }
 
-  logout (){
+
+  public logout (){
     var headers = new Headers();
     if (this.get_local_storage()!= null) {
       headers.append( 'Authorization', this.get_local_storage());
@@ -66,7 +83,6 @@ export class LocalStorageService {
       }, error => {
           console.log(error.json());
       });
-
 
   }
 

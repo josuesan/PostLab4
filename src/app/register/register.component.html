@@ -35,6 +35,10 @@
 
 			    <input type="password" class="form-control" formControlName="password" placeholder="Contraseña" >
 			    <div class="alert alert-danger" *ngIf="!myForm.controls['password'].valid && myForm.controls['password'].touched ">Tu debes colocar un contraseña válida (6 caracteres mínimos).</div>
+
+
+			    <input type="password" class="form-control" formControlName="repeat" placeholder="Repita su contraseña" >
+			    <div class="alert alert-danger" *ngIf="!check(myForm.controls['password'].value , myForm.controls['repeat'].value ) && myForm.controls['repeat'].touched">Su contraseñas no son iguales.</div>
 		    </div>
 	
 		    <div align="center">

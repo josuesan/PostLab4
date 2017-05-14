@@ -4,14 +4,12 @@
       <a class="navbar-brand ff-pacifico" href="#">{{title}}</a>
     </div>
     <ul class="nav navbar-nav">
-      <li><a >Home</a></li>
+      <li><a>Home</a></li>
       <li><a routerLink="/productos" routerLinkActive="active">Productos</a></li>
-      <li><a >Page 2</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-
-      <li><a  routerLink="/register" routerLinkActive="active"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a  routerLink="/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li><a *ngIf="this.serv.get_no_exist_user()" routerLink="/register" routerLinkActive="active"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a *ngIf="this.serv.get_no_exist_user()" routerLink="/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       <li><a *ngIf="this.serv.get_local_storage()" routerLink="/perfil" routerLinkActive="active"><span class="glyphicon glyphicon-log-out"></span> Perfil</a></li>
       <li><a *ngIf="this.serv.get_local_storage()" (click)=this.serv.logout() routerLinkActive="active"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
     </ul>
@@ -23,7 +21,4 @@
 <p-messages [value]=this.servicio.msgs></p-messages>
 <div class="container" >
     <router-outlet> </router-outlet>
-    
-		
-
 </div>

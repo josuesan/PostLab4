@@ -22,5 +22,6 @@
 <div class="col-6">
 	<product-show #product (Refresh)="refresh()" (Edit)="editar($event)"> </product-show>
 </div>
+<button *ngIf="this.serv.get_exist_user()"> Agregar producto </button>
 </div>
 

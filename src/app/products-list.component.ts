@@ -2,6 +2,7 @@ import { Component, ViewChild, EventEmitter, Output  } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import { Product }  from './product-show.component';
 import { MsgService } from './msg.service';
+import { LocalStorageService } from './localstorage.service';
 
 @Component({
   selector: 'products-list',
@@ -17,7 +18,7 @@ export class ProductsList {
   	@Output() Editar = new EventEmitter();
 
 	
-	constructor(public http: Http, public servicio: MsgService) {
+	constructor(public http: Http, public servicio: MsgService, public serv: LocalStorageService) {
 		this.http.get('http://localhost:5000/listar')
 			.subscribe(data => {
 				if (data.json().error == true){
