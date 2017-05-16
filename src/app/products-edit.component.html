@@ -1,6 +1,6 @@
 <div class="row">
 	<h2 class = "ta-center ff-pacifico">
-  		Agregar Producto
+  		Editar Producto
 	</h2>
 <div class="col-12">
 	<form [formGroup]="myForm" (ngSubmit)="new()" class = "formulario">
@@ -27,11 +27,11 @@
  			</select>
 	    </div>
 	    <div align="center">
-	    	<button id = "create" type="submit" class="btn btn-success" >Crear</button>
+	    <button id = "edit" type="reset" class="btn btn-success" (click)="this.edit(this.ide)">Editar</button>
+
 	    
 	    </div>
 
 	</form>
 </div>
 </div>
-<br>

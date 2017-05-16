@@ -3,6 +3,7 @@ import { MsgService } from '../msg.service';
 import { LocalStorageService } from '../localstorage.service';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Http, Headers} from '@angular/http';
+import {Router} from '@angular/router';
 
 declare var jQuery:any;
 declare var $:any;
@@ -20,7 +21,7 @@ export class PerfilComponent implements OnInit {
   private pwdActual;
   private emailActual;
   private usernameActual;
-  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService) { 
+  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService, private router: Router) { 
 
 	this.myForm = this.fb.group({
       username: ["",Validators.required],
@@ -43,6 +44,7 @@ export class PerfilComponent implements OnInit {
     this.http.get('http://localhost:5000/perfil',{ headers: headers })      
     .subscribe(data => {
             if (data.json().error == true){
+                this.router.navigate(['./login']);
                 this.servicio.msgs = [];
                 this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
                 setTimeout(() => {
@@ -116,20 +118,20 @@ export class PerfilComponent implements OnInit {
                   'password': formData.password
                 };
         }
-        console.log(json);
       this.http.put('http://localhost:5000/perfil/editar',JSON.stringify(json),{ headers: headers })      
       .subscribe(data => {
               if (data.json().error == true){
                   this.servicio.msgs = [];
-                  console.log(data.json());
+                  
                   this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
                   setTimeout(() => {
                     this.servicio.msgs = [];}, 5000);
                 }
                 else{  
+                  window.scrollTo(0,0);
                   this.serv.set_username(formData.username);
                   this.servicio.msgs = [];
-                  console.log(data.json());
+                  
                   this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
                   setTimeout(() => {
                   this.servicio.msgs = [];}, 5000);

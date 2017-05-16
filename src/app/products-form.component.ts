@@ -4,6 +4,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { ProductsList }  from './products-list.component';
 import { MsgService } from './msg.service';
 import { LocalStorageService } from './localstorage.service';
+import {Router} from '@angular/router';
 
 
 
@@ -29,11 +30,20 @@ export class ProductsForm implements AfterViewInit{
     category: [""]
   });
 
-  @ViewChild(ProductsList)
-  private PL: ProductsList;
+  /*@ViewChild(ProductsList)
+  private PL: ProductsList;*/
 
-  ngAfterViewInit() {}
-  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService) {}
+  ngAfterViewInit() {
+    if (this.serv.get_local_storage() == null){
+      this.servicio.msgs = [];
+      this.servicio.msgs.push({severity:'error', summary:'Acceso denegado', detail:'Debes iniciar sesión'});
+      this.router.navigate(['./login']);
+      setTimeout(() => {
+      this.servicio.msgs = []; }, 5000);
+                
+     }
+  }
+  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService, private router: Router) {}
 
   new () {
   	let formData = this.myForm.value;
@@ -46,10 +56,11 @@ export class ProductsForm implements AfterViewInit{
 
   	this.http.post('http://localhost:5000/crear', JSON.stringify(formData),{ headers: headers })      
   	.subscribe(data => {
+            this.router.navigate(['./productos']);
             this.servicio.msgs = [];
             this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
-            $("input").val('');
-            this.PL.refresh();
+            //$("input").val('');
+            //this.PL.refresh();
             setTimeout(() => {
             this.servicio.msgs = []; }, 5000);
            
@@ -57,61 +68,6 @@ export class ProductsForm implements AfterViewInit{
           console.log(error.json());
       });
   }
-
-   edit (id) {
-    let formData = this.myForm.value;
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-     if (this.serv.get_local_storage()!= null) {
-          headers.append( 'Authorization', this.serv.get_local_storage());
-          headers.append( 'username', this.serv.get_username());
-      }
-
-    this.http.put('http://localhost:5000/editar/'+id, JSON.stringify(formData),{ headers: headers })      
-    .subscribe(data => {
-             if(data.json().error == true){
-                this.servicio.msgs = [];
-                this.servicio.msgs.push({severity:'error', summary:'', detail:data.json().mensaje});
-                setTimeout(() => {
-                this.servicio.msgs = []; }, 5000);
-                
-              }
-              else
-              {
-                  this.servicio.msgs = [];
-                  this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
-                  $("input").val('');
-                  $("#create").show();
-                  $("#edit").hide();
-                  this.PL.show(id);
-                  this.PL.refresh();
-                  setTimeout(() => {
-                  this.servicio.msgs = []; }, 5000);
-              }
-      }, error => {
-          console.log(error.json());
-      });
-
-     
-  }
-
-  mostrar(event):void{
-    console.log(event);
-    $("#edit").show();
-    $("#create").hide();
-    this.myForm.setValue({name:event.name,
-      price:event.price,
-      description:event.description,
-      img:event.img,
-      sell:event.sell,
-      category:event.category
-    });
-    this.ide = event.id;
-  }
-
-
-
 }
 
 

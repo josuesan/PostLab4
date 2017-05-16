@@ -220,6 +220,8 @@ def edit(ide):
 	sesion = Session()
 	usuario = request.headers.get('username')
 	token_angular = request.headers.get('Authorization')
+	print(usuario)
+	print(token_angular)
 	#Verificamos si el usuario tiene una sesión activa
 	if token_angular:
 		if sesion.exist_session(usuario, token_angular):

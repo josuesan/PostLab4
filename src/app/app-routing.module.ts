@@ -5,13 +5,17 @@ import { PerfilComponent }   from './perfil/perfil.component';
 import { RegisterComponent } from './register/register.component';
 import { ProductsList }  from './products-list.component';
 import { ProductsForm }  from './products-form.component';
+import { Product }  from './product-show.component';
+import { ProductsEdit }  from './products-edit.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'productos', component: ProductsList },
+  { path: 'producto/:id', component: Product },
   { path: 'perfil', component: PerfilComponent },
-  { path: 'agregar-producto', component: ProductsForm }
+  { path: 'productos/agregar', component: ProductsForm },
+  { path: 'producto/editar/:id', component: ProductsEdit },
 ];
 @NgModule({
   imports: [

@@ -32,7 +32,6 @@ export class LocalStorageService {
   }
 
   public set_local_storage(token){
-    console.log("hola");
     localStorage.setItem('Session-Token', token);
     sessionStorage.setItem('Session-Token', token);
   }

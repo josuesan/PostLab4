@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { ProductsList } from './products-list.component';
 import { ProductsForm } from './products-form.component';
 import { Product } from './product-show.component';
+import { ProductsEdit } from './products-edit.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,6 +22,7 @@ import { PerfilComponent } from './perfil/perfil.component';
     ProductsList,
     ProductsForm,
     Product,
+    ProductsEdit,
     LoginComponent,
     RegisterComponent,
     PerfilComponent

@@ -1,24 +1,27 @@
-import { Component, ViewChild, EventEmitter, Output  } from '@angular/core';
+import { Component, ViewChild, EventEmitter, Output } from '@angular/core';
 import { Http, Headers} from '@angular/http';
-import { Product }  from './product-show.component';
+//import { Product }  from './product-show.component';
 import { MsgService } from './msg.service';
 import { LocalStorageService } from './localstorage.service';
+import {Router} from '@angular/router';
+
+
 
 @Component({
   selector: 'products-list',
-  templateUrl: './products-list.component.html'
+  templateUrl: './products-list.component.html',
+  styleUrls: ['./products.css']
 })
 
 export class ProductsList {
   products;
 
-  @ViewChild(Product)
-  private P: Product;
+  //@ViewChild(Product)
+  //private P: Product;
 
-  	@Output() Editar = new EventEmitter();
-
+  	//@Output() Editar = new EventEmitter();
 	
-	constructor(public http: Http, public servicio: MsgService, public serv: LocalStorageService) {
+	constructor(public http: Http, public servicio: MsgService, public serv: LocalStorageService,private router: Router) {
 		this.http.get('http://localhost:5000/listar')
 			.subscribe(data => {
 				if (data.json().error == true){
@@ -52,15 +55,10 @@ export class ProductsList {
       		}, error => {
           		console.log(error.json());
       		});
-	
-	}
-
-	editar(event):void{
-		this.Editar.emit(event);
 	}
 
 	show(id){
-		this.P.show(id);
+		this.router.navigate(['./producto/'+id]);
 	}
 
 	
