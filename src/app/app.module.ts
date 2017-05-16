@@ -13,7 +13,6 @@ import { RegisterComponent } from './register/register.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MsgService } from './msg.service';
 import { LocalStorageService } from './localstorage.service';
-import { LogoutComponent } from './logout/logout.component';
 import { PerfilComponent } from './perfil/perfil.component';
 
 @NgModule({
@@ -24,7 +23,6 @@ import { PerfilComponent } from './perfil/perfil.component';
     Product,
     LoginComponent,
     RegisterComponent,
-    LogoutComponent,
     PerfilComponent
   ],
   imports: [

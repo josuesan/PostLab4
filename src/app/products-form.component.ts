@@ -12,7 +12,9 @@ declare var $:any;
 
 @Component({
   selector: 'products-form',
-  templateUrl: './products-form.component.html'
+  templateUrl: './products-form.component.html',
+  styleUrls: ['./products.css']
+
 })
 
 export class ProductsForm implements AfterViewInit{

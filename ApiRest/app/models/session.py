@@ -30,6 +30,12 @@ class Session(db.Model):
 			else:
 				return 0
 
+	def edit_session(self, usernameAnt, email, username):
+		aux = Session.query.filter_by(username=usernameAnt).first()
+		aux.email = email
+		aux.username = username
+		
+
 	def exist_sesion(self, username):
 		aux = Session.query.filter_by(username=username).first()
 		if aux is None:

@@ -47,13 +47,38 @@ class Users(db.Model):
 		if aux is None:
 			return 0
 		return check_password_hash(aux.password,pwd)
+
+	def exist_user_perfil(self, id_user, username, email):	
+		usernameAnt =  Users.query.filter_by(id=id_user).first().username	
+		aux = Users.query.filter_by(username=username).first()
+		if aux is None:
+			aux2 = Users.query.filter_by(email=email).first()
+			if aux2 is None:
+				return 0,usernameAnt
+			else:
+				if aux2.id == id_user:
+					return 0,usernameAnt
+				else:
+					return 1,'email'
+
+		if aux.id == id_user:
+			return 0,usernameAnt
+		else:
+			return 1, 'username'
+
+	def edit_perfil(self, id_user, email, username, pwd):
+		aux = Users.query.filter_by(id=id_user).first()
+		aux.email = email
+		aux.username = username
+		aux.password = pwd
+		
 		
 	def get_user(self, usuario):		
 		aux = Users.query.filter_by(username=usuario).first()
 		fecha = str(aux.birthdate.year)+'-'+str(aux.birthdate.month)+'-'+str(aux.birthdate.day)
 		if aux is None:
 			return 0
-		return {'nombre': aux.name,'apellido':aux.lastName,'username': aux.username,'email':aux.email,'password': aux.password, 'nacimiento': fecha, 'genero':aux.gender}
+		return {'id': aux.id, 'nombre': aux.name,'apellido':aux.lastName,'username': aux.username,'email':aux.email,'password': aux.password, 'nacimiento': fecha, 'genero':aux.gender}
 
 	def create_password(self, pwd):
 		return generate_password_hash(pwd)
@@ -61,6 +86,4 @@ class Users(db.Model):
 	def verify_password(self, session, token):
 		return check_password_hash(session,token)	
 
-	def set_user(self, username, email, password, name, lastName, birthdate,gender):	
-		#Retorno el objecto de la bd y el registro nuevo a almacenar
-		return Users.query.filter_by(username=username), {'username': username,'email': email,'password': password,'name': name,'lastName': lastName,'birthdate': birthdate,'gender': gender}
+	

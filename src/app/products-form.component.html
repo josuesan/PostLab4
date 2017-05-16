@@ -1,15 +1,23 @@
 <div class="row">
+	<h2 class = "ta-center ff-pacifico">
+  		Agregar Producto
+	</h2>
 <div class="col-12">
-	<form [formGroup]="myForm" (ngSubmit)="new()">
+	<form [formGroup]="myForm" (ngSubmit)="new()" class = "formulario">
 
 	    <div class="form-group" >
 
-		    <input type="text" class="form-control" formControlName="name" placeholder="Nombre" required="required" >
-		    <input type="text" class="form-control" formControlName="price" placeholder="Precio" required="required">
-		    <input type="text" class="form-control" formControlName="description" placeholder="Descripcion" required="required">
-		    <input type="text" class="form-control" formControlName="img" placeholder="Imagen URL" required="required">
-		    <input type="number" class="form-control" formControlName="sell" placeholder="Nro de vendidos" min="0" required="required">
-		    <select class="form-control" formControlName="category" required="required">
+		    <input type="text" class="form-control" formControlName="name" placeholder="Nombre">
+		    <br>
+		    <input type="number" class="form-control" formControlName="price" placeholder="Precio" min="0" >
+		    <br>
+		    <input type="text" class="form-control" formControlName="description" placeholder="Descripcion">
+		    <br>
+		    <input type="text" class="form-control" formControlName="img" placeholder="Imagen URL">
+		    <br>
+		    <input type="number" class="form-control" formControlName="sell" placeholder="Nro de vendidos" min="0">
+		    <br>
+		    <select class="form-control" formControlName="category">
 		    	<option value="">Categoría</option>
 		    	<option value="Camisas">Camisas</option>
 		    	<option value="Correas">Correas</option>
@@ -19,8 +27,8 @@
  			</select>
 	    </div>
 	    <div align="center">
-	    <button id = "create" type="submit" class="btn btn-default" >Crear</button>
-	    <button id = "edit" type="reset" class="btn btn-default" style="display: none" (click)="this.edit(this.ide)">Editar</button>
+	    <button id = "create" type="submit" class="btn btn-success" >Crear</button>
+	    <button id = "edit" type="reset" class="btn btn-success" style="display: none" (click)="this.edit(this.ide)">Editar</button>
 
 	    
 	    </div>

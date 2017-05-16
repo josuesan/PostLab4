@@ -1,27 +1,29 @@
-<div class="row">
-<div class="col-6">
-	<div class="table-responsive"  >
-		<table class="table-bordered">
-			<thead>
-				<th> Nombre </th>
-				<th> Precio </th>
-				<th> Imagen </th>
-			</thead>
-			<tbody>
-				<tr *ngFor="let p of products" (click)="product.show(p.id)" > 
-					<td> {{ p.name }} </td>
-					<td>  {{ p.price }} $ </td>
-					<td>  <img class="img-thumbnail img-responsive" width="100px" src="{{p.img}}"/> </td>
-				</tr>
-			</tbody>
+<div class ="container">
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-lg-6">
+			<div class="table-responsive">
+				<table class="table-bordered">
+					<thead>
+						<th> Nombre </th>
+						<th> Precio </th>
+						<th> Imagen </th>
+					</thead>
+					<tbody>
+						<tr *ngFor="let p of products" (click)="product.show(p.id)" > 
+							<td> {{ p.name }} </td>
+							<td>  {{ p.price }} $ </td>
+							<td>  <img class="img-thumbnail img-responsive" width="100px" src="{{p.img}}"/> </td>
+						</tr>
+					</tbody>
 
-		</table>
+				</table>
 
+			</div>
+			<a routerLink="/agregar-producto" class="btn btn-primary" *ngIf="this.serv.get_exist_user()"  > Agregar producto </a>
+		</div>
+		<div class="col-sm-6 col-md-6 col-lg-6">
+			<product-show #product (Refresh)="refresh()" (Edit)="editar($event)"> </product-show>
+		</div>
 	</div>
-</div>
-<div class="col-6">
-	<product-show #product (Refresh)="refresh()" (Edit)="editar($event)"> </product-show>
-</div>
-<button *ngIf="this.serv.get_exist_user()"> Agregar producto </button>
 </div>
 

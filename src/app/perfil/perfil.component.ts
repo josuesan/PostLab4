@@ -4,6 +4,10 @@ import { LocalStorageService } from '../localstorage.service';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Http, Headers} from '@angular/http';
 
+declare var jQuery:any;
+declare var $:any;
+
+
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
@@ -12,12 +16,17 @@ import { Http, Headers} from '@angular/http';
 export class PerfilComponent implements OnInit {
 	
   public myForm: FormGroup;
+  private idActual;
+  private pwdActual;
+  private emailActual;
+  private usernameActual;
   constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService) { 
 
 	this.myForm = this.fb.group({
       username: ["",Validators.required],
 	  	email: ["",Validators.compose([Validators.required,Validators.email ])],
-	  	password: ["",Validators.compose([Validators.required,Validators.minLength(6)])],
+	  	password: ["",Validators.minLength(6)],
+      repeat: ["",Validators.minLength(6)],
       name: ["",Validators.required],
       lastname: ["",Validators.required],
       birthdate: ["",Validators.required],
@@ -31,7 +40,6 @@ export class PerfilComponent implements OnInit {
       headers.append( 'Authorization', this.serv.get_local_storage());
       headers.append( 'username', this.serv.get_username());
     }
-    console.log(this.serv.get_username())
     this.http.get('http://localhost:5000/perfil',{ headers: headers })      
     .subscribe(data => {
             if (data.json().error == true){
@@ -43,48 +51,92 @@ export class PerfilComponent implements OnInit {
               else{  
                 this.myForm.setValue({username:data.json().username,
 			      email:data.json().email,
-			      name:data.json().nombre,
+			       name:data.json().nombre,
 			      lastname:data.json().apellido,
 			      birthdate:data.json().nacimiento,
 			      gender:data.json().genero,
-			      password:''
+			      password:'',
+            repeat: ''
     			});
+              this.pwdActual = data.json().password;
+              this.idActual = data.json().id;
               }       
       }, error => {
           console.log(error.json());
       });
   }
 
+  check(value1, value2) {
+    if (value1 == value2){
+      return true;
+    }
+    else{
+      return false;
+    } 
+  }
+
+
+  activarCampos(){
+    $("#username").attr("readonly", false);
+    $("#email").attr("readonly", false);
+    $("p").show();
+    $("#pwd").show();
+    $("#labelpwd").show();
+    $("#repeat").show();
+    $("#labelrepeat").show();
+    $("#activar").hide();
+    $("#editar").show();
+
+
+  }
+
   EditPerfil (){
+    let formData = this.myForm.value;
     var headers = new Headers();
+    var json;
+    headers.append('Content-Type', 'application/json');
+
     if (this.serv.get_local_storage()!= null) {
       headers.append( 'Authorization', this.serv.get_local_storage());
-      console.log(headers);
       headers.append( 'username', this.serv.get_username());
     }
-    console.log(this.serv.get_username())
-    console.log(headers);
-    this.http.post('http://localhost:5000/perfil/editar',{ headers: headers })      
-    .subscribe(data => {
-            if (data.json().error == true){
-                this.servicio.msgs = [];
-                console.log(data.json());
-                this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
-                setTimeout(() => {
+
+    if (formData.username != this.usernameActual || formData.email != this.emailActual || formData.password != ''){
+        if (formData.password == ''){
+          json = {'id':this.idActual,
+                  'email':formData.email,
+                  'username': formData.username,
+                  'password': this.pwdActual
+                };
+        }
+        else{
+          json = {'id':this.idActual,
+                  'email':formData.email,
+                  'username': formData.username,
+                  'password': formData.password
+                };
+        }
+        console.log(json);
+      this.http.put('http://localhost:5000/perfil/editar',JSON.stringify(json),{ headers: headers })      
+      .subscribe(data => {
+              if (data.json().error == true){
+                  this.servicio.msgs = [];
+                  console.log(data.json());
+                  this.servicio.msgs.push({severity:'error', summary:'Error', detail:data.json().mensaje});
+                  setTimeout(() => {
+                    this.servicio.msgs = [];}, 5000);
+                }
+                else{  
+                  this.serv.set_username(formData.username);
+                  this.servicio.msgs = [];
+                  console.log(data.json());
+                  this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
+                  setTimeout(() => {
                   this.servicio.msgs = [];}, 5000);
-              }
-              else{  
-                this.myForm.setValue({username:data.json().username,
-                  email:data.json().email,
-                  name:data.json().nombre,
-                  lastname:data.json().apellido,
-                  birthdate:data.json().nacimiento,
-                  gender:data.json().genero,
-                  password:''
-                });
-              }       
-      }, error => {
-          console.log(error.json());
-      });
+                }       
+        }, error => {
+            console.log(error.json());
+        });
+    }
   }
 }
