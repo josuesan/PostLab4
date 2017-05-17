@@ -7,6 +7,7 @@ import { ProductsList }  from './products-list.component';
 import { ProductsForm }  from './products-form.component';
 import { Product }  from './product-show.component';
 import { ProductsEdit }  from './products-edit.component';
+import { AppComponent }  from './app.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   { path: 'perfil', component: PerfilComponent },
   { path: 'productos/agregar', component: ProductsForm },
   { path: 'producto/editar/:id', component: ProductsEdit },
+  { path: 'home', component: AppComponent },
 ];
 @NgModule({
   imports: [

@@ -20,15 +20,7 @@ declare var $:any;
 
 export class ProductsForm implements AfterViewInit{
   private ide: number;
-  
-  public myForm = this.fb.group({
-  	name: [""],
-  	price: [""],
-    description: [""],
-    img: [""],
-    sell: [""],
-    category: [""]
-  });
+  public myForm: FormGroup;
 
   /*@ViewChild(ProductsList)
   private PL: ProductsList;*/
@@ -43,7 +35,16 @@ export class ProductsForm implements AfterViewInit{
                 
      }
   }
-  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService, private router: Router) {}
+  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService, private router: Router) {
+      this.myForm = this.fb.group({
+          name: ["",Validators.required],
+          price: ["",Validators.required],
+          description: ["",Validators.required],
+          img: ["",Validators.required],
+          sell: ["",Validators.required],
+          category: ["",Validators.required]
+      });
+  }
 
   new () {
   	let formData = this.myForm.value;

@@ -3,6 +3,7 @@ import { Http, Headers} from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MsgService } from '../msg.service';
 import { LocalStorageService } from '../localstorage.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { LocalStorageService } from '../localstorage.service';
 export class LoginComponent implements OnInit {
 
 	public myForm: FormGroup; 
-  	constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService,public serv: LocalStorageService) { 
+  	constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService,public serv: LocalStorageService,private router: Router) { 
   		
   		this.myForm = this.fb.group({
 	  	username: ["",Validators.required],
@@ -43,12 +44,13 @@ export class LoginComponent implements OnInit {
                 setTimeout(() => {
                   this.servicio.msgs = [];}, 5000);
               }
-              else{  
+              else{
+                this.router.navigate(['./productos']);  
                 this.servicio.msgs = [];
                 this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
                 setTimeout(() => {
                 this.servicio.msgs = [];
-                //this.router.navigate(['./login']);
+                
                 }, 5000);
                 var token = data.json().token;
                 console.log(data.json().token);

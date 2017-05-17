@@ -23,19 +23,21 @@ export class ProductsEdit implements AfterViewInit{
   id: number;
   private sub: any;
   
-  public myForm = this.fb.group({
-  	name: [""],
-  	price: [""],
-    description: [""],
-    img: [""],
-    sell: [""],
-    category: [""]
-  });
+  public myForm: FormGroup;
 
   /*@ViewChild(ProductsList)
   private PL: ProductsList;*/
 
-  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService, private route: ActivatedRoute, private router: Router) {}
+  constructor(public fb: FormBuilder, public http: Http, public servicio: MsgService, public serv: LocalStorageService, private route: ActivatedRoute, private router: Router) {
+    this.myForm = this.fb.group({
+          name: ["",Validators.required],
+          price: ["",Validators.required],
+          description: ["",Validators.required],
+          img: ["",Validators.required],
+          sell: ["",Validators.required],
+          category: ["",Validators.required]
+      });
+  }
 
   ngAfterViewInit() {
     if (this.serv.get_local_storage()!= null) {

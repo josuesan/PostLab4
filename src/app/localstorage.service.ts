@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers} from '@angular/http';
 import { MsgService } from './msg.service';
-
+import {Router} from '@angular/router';
 @Injectable()
 export class LocalStorageService {
 
-  constructor(public http: Http, public servicio: MsgService) {}
+  constructor(public http: Http, public servicio: MsgService,private router: Router) {}
 
   public get_no_exist_user(){
     if (localStorage.getItem('Session-Token') == null) {
@@ -68,12 +68,13 @@ export class LocalStorageService {
                 setTimeout(() => {
                   this.servicio.msgs = [];}, 5000);
               }
-              else{  
+              else{ 
+                this.router.navigate(['./login']); 
                 this.servicio.msgs = [];
                 this.servicio.msgs.push({severity:'success', summary:'', detail:data.json().mensaje});
                 setTimeout(() => {
                 this.servicio.msgs = [];
-                //this.router.navigate(['./login']);
+                
                 }, 5000);
                 var token = data.json().token;
                 this.delete_local_storage();
